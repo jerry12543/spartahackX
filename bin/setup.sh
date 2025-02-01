@@ -15,6 +15,7 @@ pip install --upgrade pip
 # Install dependencies from requirements.txt
 if [ -f requirements.txt ]; then
     pip install -r requirements.txt
+    pip install -e loanminnow
     echo "Dependencies installed successfully."
 else
     echo "requirements.txt not found. Skipping dependency installation."

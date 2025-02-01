@@ -1,0 +1,15 @@
+{
+    "name": "loanminnow",
+    "version": "1.0.0",
+    "description": "LoanMinnow application",
+    "scripts": {
+        "start:client": "cd client && npm start",
+        "start:api": "python app.py",
+        "dev": "concurrently \"npm run start:client\" \"flask --app loanminnow:app --debug run --host 0.0.0.0 --port 8000\"",
+        "install:client": "cd client && npm install",
+        "install:all": "npm install && npm run install:client"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    }
+}
