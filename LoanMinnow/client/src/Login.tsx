@@ -1,30 +1,45 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
 import './styles/Login.css';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
-        username: '',
-        password: ''
+        email: '',
+        password: '',
+        name: ''
     });
     const [error, setError] = useState("");
+    const [isLogin, setIsLogin] = useState(true);
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log('Form data:', formData);
+        if (!formData.email || !formData.password || (!isLogin && !formData.name)) {
+            setError('Please fill in all fields');
+            return;
+        }
         try {
-            e.preventDefault();
-            const response = await fetch("/login/",
-                {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error('Login failed');
+            const response = await fetch(isLogin ? "/auth/login/" : "/auth/signup/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.status === 200) {
+                setError(isLogin ? 'Login successful' : 'Sign up successful');
+            }
+            else if (response.status === 409) {
+                setError(isLogin ? "Incorrect password" : "Email already exists, please sign in");
+            }
+            else if (response.status === 400 && isLogin) {
+                setError("Email not found, please sign up");
+            }
+            else {
+                setError(isLogin ? 'Sign in failed' : 'Sign up failed');
             }
         } catch (err) {
-            setError('Login failed. Please try again.');
-            console.error('Login error:', err);
+            setError(err.message);
+            console.error('Error:', err);
         }
     };
 
@@ -35,97 +50,74 @@ const LoginPage = () => {
         });
     };
 
-    const [isLogin, setIsLogin] = useState(true);
-
     return (
-
-
         <div className="vh-100 d-flex justify-content-center">
-        <div className="auth-page">
-        <div className="auth-left">
-          <div className="auth-content">
-            <h1>Welcome to LoanMinnow</h1>
-            <p>Start your journey with us today</p>
-          </div>
-        </div>
-        
-        <div className="auth-right">
-          <div className="auth-form-container">
-            <h2>{isLogin ? 'Sign In' : 'Create Account'}</h2>
-            
-            <form className="auth-form">
-              {!isLogin && (
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input type="text" className="auth-input" />
+            <div className="auth-page">
+                <div className="auth-left">
+                    <div className="auth-content">
+                        <h1>Welcome to LoanMinnow</h1>
+                        <p>Start your journey with us today</p>
+                    </div>
                 </div>
-              )}
-              
-              <div className="form-group">
-                <label>Email</label>
-                <input type="email" className="auth-input" />
-              </div>
-              
-              <div className="form-group">
-                <label>Password</label>
-                <input type="password" className="auth-input" />
-              </div>
-  
-              <button type="submit" className="auth-button">
-                {isLogin ? 'Sign In' : 'Sign Up'}
-              </button>
-            </form>
-  
-            <div className="auth-switch">
-              {isLogin ? (
-                <p>Don't have an account? <span onClick={() => setIsLogin(false)}>Sign up</span></p>
-              ) : (
-                <p>Already have an account? <span onClick={() => setIsLogin(true)}>Sign in</span></p>
-              )}
+                
+                <div className="auth-right">
+                    <div className="auth-form-container">
+                        <h2>{isLogin ? 'Sign In' : 'Create Account'}</h2>
+                        {error && <div className="error-message">{error}</div>}
+                        
+                        <form onSubmit={handleSubmit}>
+                            {!isLogin && (
+                                <div className="form-group">
+                                    <label>Full Name</label>
+                                    <input 
+                                        type="text" 
+                                        className="auth-input" 
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            )}
+                            
+                            <div className="form-group">
+                                <label>Email</label>
+                                <input 
+                                    type="text" 
+                                    className="auth-input" 
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input 
+                                    type="password" 
+                                    className="auth-input" 
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <button type="submit" className="auth-button">
+                                {isLogin ? 'Sign In' : 'Sign Up'}
+                            </button>
+                        </form>
+
+                        <div className="auth-switch">
+                            {isLogin ? (
+                                <p>Don't have an account? <span onClick={() => setIsLogin(false)}>Sign up</span></p>
+                            ) : (
+                                <p>Already have an account? <span onClick={() => setIsLogin(true)}>Sign in</span></p>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      </div>
     );
 };
 
 export default LoginPage;
-
-
-
-{/* <div className="login-container">
-<h2>Login to Your Account</h2>
-<form onSubmit={handleSubmit} className="login-form">
-    <div className="form-group">
-        <label htmlFor="username">Username:</label>
-        <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-        />
-    </div>
-
-    <div className="form-group">
-        <label htmlFor="password">Password:</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-        />
-    </div>
-
-    <button type="submit" className="login-button">Log In</button>
-</form>
-
-<div className="signup-link">
-    Don't have an account? <a href="/signup">Sign up here</a>
-</div>
-{error && <div className="error-message">{error}</div>}
-</div> */}

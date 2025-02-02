@@ -1,6 +1,6 @@
 """"This module contains the routes for user signup, login, and logout."""
-from flask import Blueprint, request, redirect, url_for, flash, abort
-from werkzeug.security import generate_password_hash
+from flask import Blueprint, request, redirect, url_for, abort
+from werkzeug.security import generate_password_hash, check_password_hash
 from loanminnow.model import db, User
 from flask_login import login_user, login_required, logout_user
 from flask import jsonify
@@ -30,13 +30,11 @@ def signup():
     password = data["password"]
 
     if not email or not name or not password:
-        flash('All fields are required.', 'error')
         return jsonify({"error": "Missing required fields"}), 400 
 
     # Check if user exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
-        flash('Email already in use. Try logging in.', 'error')
         return jsonify({"error": "Email is already in use. Please log in or use a different email."}), 409
 
     new_user = create_user(name, email, password)
@@ -44,14 +42,7 @@ def signup():
     # Log in the user automatically after signup
     login_user(new_user)
 
-    flash('Signup successful! You are now logged in.', 'success')
-
-    context = {
-        "name": new_user.name,
-        "email": new_user.email,
-        "id": new_user.id
-    }
-    return  jsonify({"message": "User created successfully", "user": context}), 201
+    return jsonify({"message": "Login successful"}), 200
 
 
 @auth_blueprint.route('/login/', methods=['POST'])
@@ -62,13 +53,16 @@ def login():
     password = data["password"]
 
     user = User.query.filter_by(email=email).first()
-    if not user or not (user.password == generate_password_hash(password)):
-        flash('Invalid email or password.', 'error')
-        return redirect(url_for('auth.login'))
+    if not user:
+        return jsonify({"error": "User not found, please sign up."}), 400
+    if not check_password_hash(user.password, password):
+        print(user.password)
+        print(generate_password_hash(password))
+        return jsonify({"error": "Invalid password, please try again."}), 409
+
     
     login_user(user)
-    flash('Login successful!', 'success')
-    return 500
+    return jsonify({"message": "Login successful"}), 200
 
 
 @auth_blueprint.route('/logout/', methods=['POST'])
@@ -76,5 +70,4 @@ def login():
 def logout():
     """"Log out the current user."""
     logout_user()
-    flash('You have been logged out.', 'success')
-    return 200
+    return jsonify({"message": "Logout successful"}), 200
