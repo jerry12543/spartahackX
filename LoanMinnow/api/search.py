@@ -2,10 +2,12 @@ import flask
 from flask import Blueprint, request, jsonify
 from sqlalchemy import or_
 from loanminnow.api.model import db, User, Venture, Pledge
+from flask_login import login_required
 
 search_blueprint = Blueprint('search', __name__)
 
 @search_blueprint.route('/<string:query>', methods=['GET'])
+@login_required
 def search():
     q = request.args.get('q', '')
 

@@ -95,14 +95,14 @@ const DashboardSidebar = () => {
       <div className="projects-section">
         <h2>Your Projects</h2> 
         {dashboardData.top_created.map((venture) => {
-          <ProjectCard venture_id={venture.venture_id} label={venture.venture_name} />
+          <ProjectCard venture_id={venture.venture_id} label={venture.venture_name} percentage={venture.percentage} amount={venture.amount}/>
         })}
       </div>
 
       <div className="projects-section">
         <h2>Your Investments</h2>
         {dashboardData.top_supported.map((venture) => {
-          <ProjectCard venture_id={venture.venture_id} label={venture.venture_name} />
+          <ProjectCard venture_id={venture.venture_id} label={venture.venture_name} percentage={venture.percentage} amount={venture.amount}/>
         })}
       </div>
     </aside>

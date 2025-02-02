@@ -1,12 +1,65 @@
 // ProfilePage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './styles/ProfilePage.css';
 import './styles/Dashboard.css';
 import ProjectCard from './ProjectCard.tsx';
 import NavBar from './NavBar.tsx';
 
+interface Venture {
+  venture_id: number;
+  venture_name: string;
+  venture_image_url: string;
+  total_pledged: number;
+  total_requested: number;
+  total_amount_invested_user: number;
+}
+
+interface ProfileData {
+  username: string;
+  score: number;
+  available_credits: number;
+  credits_invested: number;
+  projects: Venture[];
+  ventures: Venture[];
+}
+
 const ProfilePage = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData>({
+    username: '',
+    score: 0,
+    available_credits: 0,
+    credits_invested: 0,
+    projects: [],
+    ventures: []
+  });
+  const { profile_id } = useParams<{ profile_id: string }>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProfileData = async () => {
+    try {
+      const url = '/users/profile/' + profile_id + '/';
+      const response = await fetch(url, {
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile data');
+      }
+
+      const data = await response.json();
+      setProfileData(data);
+      console.log('Profile data:', data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Profile fetch error:', err);
+    } finally {
+      setIsLoading(false);
+      console.log('Profile data:', profileData);
+    }
+  }
 
   const [goal, setGoal] = useState(0);
 
@@ -21,17 +74,27 @@ const ProfilePage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <>
     <NavBar />
     <div className="container-fluid d-flex justify-content-center pt-5" style={{marginTop:60}}>
     <div className="profile-page-container">
-      {/* Profile Header */}
       <div className="profile-header">
-        {/* Profile Picture and Username */}
         <div className="profile-info">
           <div className="profile-picture-container">
-            <div
+            <img
               className="profile-picture"
               style={{
                 backgroundImage: `url(${profileImage || ''})`,
@@ -44,7 +107,7 @@ const ProfilePage = () => {
                 className="hidden-file-input"
                 onChange={handleImageChange}
               />
-            </div>
+            </img>
           </div>
           <h2 className="username">user_name</h2>
         </div>

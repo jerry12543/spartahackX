@@ -4,9 +4,12 @@ from loanminnow.api.routes import api_blueprint
 from loanminnow.api.authtools import auth_blueprint
 from loanminnow.api.search import search_blueprint
 from loanminnow.api.ventures import venture_blueprint
+from loanminnow.api.transactions import transactions_blueprint
+from loanminnow.api.users import users_blueprint
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from loanminnow.api.model import db, User
+
 
 login_manager = LoginManager()
 
@@ -27,6 +30,8 @@ def create_app():
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(search_blueprint, url_prefix='/search')
     app.register_blueprint(venture_blueprint, url_prefix='/venture')
+    app.register_blueprint(transactions_blueprint, url_prefix='/transactions')
+    app.register_blueprint(users_blueprint, url_prefix='/users')
     
     return app
 

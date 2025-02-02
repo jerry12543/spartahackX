@@ -22,6 +22,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/investordetails" element={<InvestorView />} />
         <Route path="/clientdetails" element={<ClientView />} />
+        <Route path="/profile/:profile_id" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

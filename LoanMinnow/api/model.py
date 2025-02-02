@@ -55,6 +55,7 @@ class Venture(db.Model):
     owner = db.relationship('User', back_populates='ventures_owned')
     pledges = db.relationship('Pledge', back_populates='venture', lazy=True)
     payments = db.relationship('Payment', back_populates='venture', lazy=True)
+    interests = db.relationship('Interest', back_populates='venture')
     
     def __init__(self, name, description, goal, interest_rate, due_date, owner, image_url=None):
         self.name = name
@@ -113,6 +114,22 @@ class Payment(db.Model):
     def is_overdue(self):
         """Returns True if payment was made after the venture's due date."""
         return self.payment_date > self.venture.due_date
+
+
+class Interest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    venture_id = db.Column(db.Integer, db.ForeignKey('venture.id'), nullable=False)
+    interest_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    venture = db.relationship('Venture', back_populates='interests')
+
+    def __init__(self, amount, venture, interest_date=None):
+        self.amount = amount
+        self.venture = venture
+        if interest_date:
+            self.interest_date = interest_date
 
 
 def get_db():

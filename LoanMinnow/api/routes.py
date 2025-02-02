@@ -25,17 +25,81 @@ def get_api_v1():
     return flask.jsonify(**context)
 
 
+@api_blueprint.route('/dashboard/<int:profile_id>/', methods=['GET'])
 @api_blueprint.route('/dashboard/', methods=['GET'])
 @login_required
-def dashboard():
-
+def dashboard(profile_id=None):
     n = 3 # number of top supported and top created ventures to show
+    if profile_id is None or profile_id == current_user.id:
+        return self_dashboard(n)
+    
+    profile = User.query.get(profile_id)
+    return other_dashboard(n, profile)
 
+
+def other_dashboard(n, profile):
+    if profile is None:
+        abort(404, description="User not found.")
+    
+    score = api.score.get_score(profile)
+    top_supported = db.session.query(
+        func.sum(Pledge.amount).label("total_amount_invested"), Venture
+        ).join(
+            Venture, Pledge.venture_id == Venture.id
+        ).filter(
+            Pledge.lender_id == profile.id
+        ).group_by(
+            Venture.id
+        ).order_by(
+            func.sum(Pledge.amount).desc()
+        ).limit(n).all()
+    
+    top_created = db.session.query(
+        func.sum(Pledge.amount).label("total_amount_invested"), Venture
+        ).join(
+            Venture, Pledge.venture_id == Venture.id
+        ).filter(
+            Pledge.recipient_id == profile.id
+        ).group_by(
+            Venture.id
+        ).order_by(
+            func.sum(Pledge.amount).desc()
+        ).limit(n).all()
+
+    top_supported_data = [
+        {
+            "venture_id": venture.id,
+            "venture_name": venture.name,
+            "venture_image_url": venture.image_url,
+            "total_pledged": sum(pledge.amount for pledge in venture.pledges),
+            "total_requested": venture.goal,
+            "total_amount_invested_user": total_amount_invested
+        }
+        for total_amount_invested, venture in top_supported
+    ]
+    top_created_data = [
+        {
+            "venture_id": venture.id,
+            "venture_name": venture.name,
+            "venture_image_url": venture.image_url,
+            "total_pledged": sum(pledge.amount for pledge in venture.pledges),
+            "total_requested": venture.goal,
+            "total_amount_invested_user": total_amount_invested
+        }
+        for total_amount_invested, venture in top_created
+    ]
+
+    context = {
+        "score": score,
+        "top_supported": top_supported_data,
+        "top_created": top_created_data
+    }
+    return jsonify(**context)
+
+def self_dashboard(n):
     user = current_user
     score = api.score.get_score(user)
-    
     available_credits = user.available_credits
-
     credits_invested = sum(pledge.amount for pledge in user.pledges)
 
     top_supported = db.session.query(
@@ -85,31 +149,6 @@ def dashboard():
         for total_amount_invested, venture in top_created
     ]
 
-    # top_supported_data = [
-    #     {
-    #         "venture_id": 0,
-    #         "venture_name": "hello",
-    #         "venture_image_url": "/fjdsaklk;das/",
-    #         "total_pledged": 45,
-    #         "total_requested": 90,
-    #         "total_amount_invested_user": 20
-    #     }
-    # ]
-    # top_created_data = [
-    #     {
-    #         "venture_id": 1,
-    #         "venture_name": "hello",
-    #         "venture_image_url": "/fjdsaklk;das/",
-    #         "total_pledged": 45,
-    #         "total_requested": 90,
-    #         "total_amount_invested_user": 20
-    #     }
-    # ]
-
-    # score = 1
-    # available_credits = 100
-    # credits_invested = 50
-
     context = {
         "score": score,
         "available_credits": available_credits,
@@ -121,6 +160,7 @@ def dashboard():
 
 
 @api_blueprint.route('/venture/newest/', methods=['GET'])
+@login_required
 def get_newest_ventures():
     """
     Return the newest ventures (ordered by descending venture ID) with pagination.
