@@ -1,11 +1,10 @@
 import flask
 from flask import Blueprint, request, jsonify
-import flask_login
 from flask_login import login_required, current_user
 import api.score
 from loanminnow.api.model import db, User, Pledge, Venture
 from sqlalchemy import func
-
+from flask import abort
 
 
 api_blueprint = Blueprint('api', __name__)
@@ -80,7 +79,6 @@ def dashboard():
         for total_amount_invested, venture in top_created
     ]
 
-
     context = {
         "score": score,
         "available_credits": available_credits,
@@ -90,68 +88,64 @@ def dashboard():
     }
     return jsonify(**context)
 
-# def get_posts():
-#     size = flask.request.args.get("size", default=10, type=int)
-#     maxpostid = flask.request.args.get("postid_lte", default=None, type=int)    
 
-#     if not maxpostid:
-#         connection = model.get_db()
-#         cur = connection.execute(
-#             """ SELECT MAX(postid) as maxpostid
-#             FROM posts
-#             ORDER BY postid DESC""")
-#         maxpostid = cur.fetchone()["maxpostid"]
-#     page = flask.request.args.get("page", default=0, type=int)
-#     url = flask.request.full_path.rstrip('?')
-#     return n_posts(size=size, maxpostid=maxpostid, page=page, url=url)
+@api_blueprint.route('/venture/newest/', methods=['GET'])
+def get_newest_ventures():
+    """
+    Return the newest ventures (ordered by descending venture ID) with pagination.
+    
+    Query Parameters:
+      - size: number of ventures to return (default: 10)
+      - page: page number (default: 0)
+      - ventureid_lte: upper bound on Venture.id (default: maximum id in table)
+    """
+    # Get query parameters
+    size = request.args.get("size", default=10, type=int)
+    page = request.args.get("page", default=0, type=int)
+    max_venture_id = request.args.get("ventureid_lte", default=None, type=int)
 
+    # Basic validation
+    if size <= 0 or page < 0:
+        abort(400, description="Invalid size or page parameter.")
 
+    # If no max_venture_id is provided, get the maximum venture id available.
+    if max_venture_id is None:
+        max_venture_id = db.session.query(func.max(Venture.id)).scalar()
+        if max_venture_id is None:
+            # No ventures in the database.
+            return jsonify(next="", results=[], url=request.full_path.rstrip('?'))
 
-# def n_posts(size, maxpostid, page, url="/api/v1/posts/"):
-#     """Return N newest post URLs and IDs."""
-#     if size <= 0 or page < 0:
-#         return flask.abort(400)
-#     connection = model.get_db()
-#     # Fetch the posts made by the user or by users they follow
-#     cur = connection.execute(
-#         """
-#         SELECT p.postid
-#         FROM posts AS p
-#         WHERE p.postid <=
-#         COALESCE(?, (SELECT MAX(postid) FROM posts))
-#         AND
-#         (p.owner = ?
-#         OR p.owner IN (
-#             SELECT username2 as username
-#             FROM following
-#             WHERE username1 = ?
-#         ))
-#         ORDER BY p.postid DESC
-#         LIMIT ? OFFSET ?
-#         """,
-#         (maxpostid, model.User.name, model.User.name, size, page*size))
+    # Query ventures with id <= max_venture_id, ordering by newest first.
+    ventures_query = db.session.query(Venture).filter(
+        Venture.id <= max_venture_id
+    ).order_by(Venture.id.desc())
+    
+    ventures = ventures_query.limit(size).offset(page * size).all()
 
-#     posts = cur.fetchall()
-#     if len(posts) < size:
-#         nxt = ""
-#     else:
-#         nxt = (f"/api/v1/posts/?size={size}"
-#                f"&page={page+1}&postid_lte={str(maxpostid)}")
-#         # posts[0]['postid']}")
-#     if len(posts) == 0:
-#         results = []
-#     else:
-#         results = [{
-#             "postid": post["postid"],
-#             "url": f"{flask.request.path}{post['postid']}/"
-#         } for post in posts]
+    # Determine the "next" link for pagination:
+    if len(ventures) < size or len(ventures) == 0:
+        next_link = ""
+    else:
+        # Use the id of the last venture in the current result as the new upper bound.
+        next_max_id = ventures[-1].id
+        next_link = (
+            f"{request.path}?size={size}&page={page+1}&ventureid_lte={next_max_id}"
+        )
 
-#     # Create the response context
-#     context = {
-#         "next": nxt,
-#         "results": results,
-#         "url": url
-#     }
+    # Format the results. Adjust the fields as needed.
+    results = [{
+        "id": venture.id,
+        "name": venture.name,
+        "description": venture.description,
+        "goal": venture.goal,
+        "interest_rate": venture.interest_rate,
+        "due_date": venture.due_date.isoformat(),
+        "image_url": venture.image_url
+    } for venture in ventures]
 
-#     # Return the response as JSON
-#     return jsonify(**context)
+    context = {
+        "next": next_link,
+        "results": results,
+        "url": request.full_path.rstrip('?')
+    }
+    return jsonify(**context)
