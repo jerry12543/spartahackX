@@ -11,7 +11,7 @@ import datetime
 
 venture_blueprint = Blueprint('venture', __name__)
 
-@venture_blueprint.route('/<int:venture_id>', methods=['GET'])
+@venture_blueprint.route('/<int:venture_id>/', methods=['GET'])
 @login_required
 def get_venture(venture_id):
     venture = Venture.query.get(venture_id)

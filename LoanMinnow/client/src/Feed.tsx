@@ -10,6 +10,7 @@ interface Venture {
   goal: number;
   interest_rate: number;
   due_date: string;
+  total_pledged: number;
   image_url: string;
 }
 
@@ -28,29 +29,38 @@ const Feed = () => {
   const fetchVentures = async (url = '/api/venture/newest/') => {
     try {
       setIsLoading(true);
-      const response = await fetch(url, {
-        credentials: 'include'
-      });
+      const response = await fetch(url, { credentials: 'include' });
 
       if (!response.ok) {
         throw new Error('Failed to fetch ventures');
       }
 
       const data: FeedResponse = await response.json();
-      setVentures(prevVentures => [...prevVentures, ...data.results]);
+
+      setVentures(prevVentures => {
+        const newVenturesMap = new Map(prevVentures.map(v => [v.id, v])); 
+
+        data.results.forEach(venture => {
+          newVenturesMap.set(venture.id, venture); // Always update with the latest API response
+        });
+
+        return Array.from(newVenturesMap.values());
+      });
+
       setNextPage(data.next || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching ventures:', err);
     } finally {
       setIsLoading(false);
-      console.log("Ventures: ", ventures);
     }
-  };
+};
 
   // Initial fetch
   useEffect(() => {
-    fetchVentures();
+    if(ventures.length === 0){
+      fetchVentures();
+    }
   }, []);
 
   // Load more function for infinite scroll
@@ -72,7 +82,7 @@ const Feed = () => {
             name={venture.name}
             description={venture.description}
             image_url={venture.image_url}
-            progress={venture.progress}
+            progress={venture.total_pledged/venture.goal}
           />
         </a>
       ))}

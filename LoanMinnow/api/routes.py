@@ -1,13 +1,26 @@
 import flask
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_login import login_required, current_user
 import api.score
 from loanminnow.api.model import db, User, Pledge, Venture
 from sqlalchemy import func
 from flask import abort
+import os
 
 
 api_blueprint = Blueprint('api', __name__)
+
+
+@api_blueprint.route('/uploads/<path:filename>', methods=["GET"])
+def download_file(filename):
+    """Download a file."""
+    if not os.path.exists(
+        os.path.join(current_app.config["MY_ADDRESS"] / current_app.config['UPLOAD_FOLDER'],
+                     filename)):
+        flask.abort(404)
+    return flask.send_from_directory(current_app.config["MY_ADDRESS"] / current_app.config['UPLOAD_FOLDER'],
+                                     filename, as_attachment=False)
+
 
 @api_blueprint.route('/', methods=['GET'])
 def get_api_v1():
@@ -90,6 +103,7 @@ def other_dashboard(n, profile):
     ]
 
     context = {
+        "username": profile.name,
         "score": score,
         "top_supported": top_supported_data,
         "top_created": top_created_data
@@ -150,6 +164,7 @@ def self_dashboard(n):
     ]
 
     context = {
+        "username": user.name,
         "score": score,
         "available_credits": available_credits,
         "credits_invested": credits_invested,
@@ -213,6 +228,7 @@ def get_newest_ventures():
         "goal": venture.goal,
         "interest_rate": venture.interest_rate,
         "due_date": venture.due_date.isoformat(),
+        "total_pledged": sum(pledge.amount for pledge in venture.pledges),
         "image_url": venture.image_url
     } for venture in ventures]
 
