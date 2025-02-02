@@ -68,7 +68,7 @@ def login():
     
     login_user(user)
     flash('Login successful!', 'success')
-    return 403
+    return 500
 
 
 @auth_blueprint.route('/logout/', methods=['POST'])
