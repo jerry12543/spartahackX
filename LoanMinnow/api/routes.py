@@ -3,12 +3,14 @@ from flask import Blueprint, request, jsonify
 import flask_login
 from flask_login import login_required
 import api.score
+from model import db, User, Pledge, Venture
+from sqlalchemy import func
 
 
 
 api_blueprint = Blueprint('api', __name__)
-auth_blueprint = Blueprint('auth', __name__)
 
+@api_blueprint.route('/', methods=['GET'])
 def get_api_v1():
     """Return API resource URLs."""
     context = {
@@ -23,14 +25,55 @@ def get_api_v1():
     }
     return flask.jsonify(**context)
 
+
 @api_blueprint.route('/dashboard/', methods=['GET'])
 @login_required
 def dashboard():
-    userid = flask_login.current_user.id
-    score = api.score.get_score(userid)
-    
 
-    context = {"score": score}
+    n = 3 # number of top supported and top created ventures to show
+
+    user_id = flask_login.current_user.id
+    score = api.score.get_score(user_id)
+    
+    available_credits = db.session.query(
+        User.available_credits.filter(User.id == user_id)
+    ).scalar()
+
+    credits_invested = db.session.query(
+        func.coalesce(func.sum(Pledge.amount), 0.0).filter(Pledge.lender_id == user_id)
+    ).scalar()
+
+    top_supported = db.session.query(
+        func.sum(Pledge.amount).label("total_amount_invested"), Venture
+        ).join(
+            Venture, Pledge.venture_id == Venture.id
+        ).filter(
+            Pledge.lender_id == user_id
+        ).group_by(
+            Venture.id
+        ).order_by(
+            func.sum(Pledge.amount).desc()
+        ).limit(n).all()
+    
+    top_created = db.session.query(
+        func.sum(Pledge.amount).label("total_amount_invested"), Venture
+        ).join(
+            Venture, Pledge.venture_id == Venture.id
+        ).filter(
+            Pledge.recipient_id == user_id
+        ).group_by(
+            Venture.id
+        ).order_by(
+            func.sum(Pledge.amount).desc()
+        ).limit(n).all()
+
+    context = {
+        "score": score,
+        "available_credits": available_credits,
+        "credits_invested": credits_invested,
+        "top_supported": top_supported,
+        "top_created": top_created
+    }
     return jsonify(**context)
 
 # def get_posts():

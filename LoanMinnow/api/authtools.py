@@ -5,8 +5,6 @@ from loanminnow.model import db, User
 from flask_login import login_user, login_required, logout_user
 from flask import jsonify
 
-# INCOMPLETE
-# TODO: return values
 
 auth_blueprint = Blueprint('auth', __name__)
 

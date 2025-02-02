@@ -1,53 +1,50 @@
 import math
 from datetime import datetime, timezone
 from sqlalchemy import func
-from loanminnow.model import db, Pledge, Payment, Venture
+from loanminnow.model import db, User
 
 
-def get_score():
-    now = datetime.datetime(timezone.utc)
-
-    # Current borrowed: sum of pledges for ventures that are not expired (due_date > now)
-    current_borrowed = db.session.query(
-        func.coalesce(func.sum(Pledge.amount), 0.0)
-    ).join(Venture).filter(Venture.due_date > now).scalar()
-
-    # Total borrowed: sum of all pledges
-    total_borrowed = db.session.query(
-        func.coalesce(func.sum(Pledge.amount), 0.0)
-    ).scalar()
-
-    # Current paid: sum of payments for ventures that are not expired
-    current_paid = db.session.query(
-        func.coalesce(func.sum(Payment.amount), 0.0)
-    ).join(Venture).filter(Venture.due_date > now).scalar()
-
-    # Total paid: sum of all payments
-    total_paid = db.session.query(
-        func.coalesce(func.sum(Payment.amount), 0.0)
-    ).scalar()
-
-    # For ventures whose due_date has passed (expired), get:
-    expired_pledged = db.session.query(
-        func.coalesce(func.sum(Pledge.amount), 0.0)
-    ).join(Venture).filter(Venture.due_date <= now).scalar()
+def get_score(user: User):
+    """
+    Calculate the karma score for a given user based on their borrowing and repayment history.
     
-    expired_paid = db.session.query(
-        func.coalesce(func.sum(Payment.amount), 0.0)
-    ).join(Venture).filter(Venture.due_date <= now).scalar()
+    This function uses the following logic:
+      - current borrowed: sum of pledge amounts (where the user is the recipient)
+        for ventures that have not yet expired (i.e. due_date > now)
+      - total borrowed: sum of all pledge amounts (as recipient)
+      - current paid: sum of payments received for ventures that have not yet expired
+      - total paid: sum of all payments received
+      - current overdue: the outstanding amount on expired ventures,
+        calculated by the User.current_overdue_amount() method
+      - total paid overdue: the sum of payments that were made after a venture’s due_date,
+        as defined in Payment.is_overdue (summed via User.total_paid_overdue())
+      
+    Finally, these metrics are combined into a karma score using a weighted formula.
+    """
 
-    # Current overdue: outstanding amount on expired ventures (if any)
-    current_overdue = max(expired_pledged - expired_paid, 0)
+    now = datetime.now(timezone.utc)
 
-    # Total paid overdue: sum of payments made after the due date (i.e. overdue payments)
-    total_paid_overdue = db.session.query(
-        func.coalesce(func.sum(Payment.amount), 0.0)
-    ).join(Venture).filter(Payment.payment_date > Venture.due_date).scalar()
+    # Pledges where the user is the recipient (i.e. borrowing)
+    current_borrowed = sum(
+        pledge.amount for pledge in user.recipients 
+        if pledge.venture.due_date > now
+    )
+    total_borrowed = sum(pledge.amount for pledge in user.recipients)
 
-    # Total overdue (ever): overdue payments already made plus current overdue outstanding
+    # Payments received by the user.
+    current_paid = sum(
+        payment.amount for payment in user.payments_received 
+        if payment.venture.due_date > now
+    )
+    total_paid = sum(payment.amount for payment in user.payments_received)
+
+    # Use the User model’s helper methods for overdue amounts.
+    current_overdue = user.current_overdue_amount()
+    total_paid_overdue = user.total_paid_overdue()
     total_overdue = total_paid_overdue + current_overdue
 
-    result = {
+    # Build the dictionary of metrics
+    stats = {
         'c_borrowed': current_borrowed,
         'borrowed': total_borrowed,
         'c_paid': current_paid,
@@ -56,7 +53,7 @@ def get_score():
         'overdue': total_overdue
     }
 
-    return calculate_karma_score(result)
+    return calculate_karma_score(stats)
 
 
 def calculate_karma_score(userinfo):
