@@ -1,6 +1,7 @@
 import React from "react";
 import './styles/FullPage.css';
 import './styles/Feed.css'
+import './styles/Post.css'
 import ProgressBar from "./ProgressBar.tsx";
 
 const Post = ( { name, description, image_url, progress} ) => {

@@ -18,12 +18,11 @@ def profile(profile_id=None):
     profile = User.query.get(profile_id)
     return other_dashboard(n, profile)
 
-@users_blueprint.route('/profile/<int:profile_id>/add_funds', methods=['POST'])
+@users_blueprint.route('/profile/add_funds/', methods=['POST'])
 @login_required
-def add_funds(profile_id):
-    if current_user.id == profile_id:
-        profile = User.query.get(profile_id)
-        profile.balance += request.form['amount']
-        db.session.commit()
-        return redirect(url_for('users.profile', profile_id=profile_id))
-    return redirect(url_for('users.profile', profile_id=current_user.id))
+def add_funds():
+    user = User.query.get(current_user.id)
+    data = request.get_json()
+    user.available_credits +=  int(data['amount'])
+    db.session.commit()
+    return jsonify({'available_credits': user.available_credits})

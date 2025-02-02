@@ -70,11 +70,11 @@ const ProfilePage = () => {
   // Function to call the API when "Add Funds" button is clicked.
   const handleAddFunds = async () => {
     try {
-      const response = await fetch('/users/addfunds/', {
+      const response = await fetch('/users/profile/add_funds/', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: goal })
+        body: JSON.stringify({ "amount": goal })
       });
       if (!response.ok) {
         throw new Error('Failed to add funds');
