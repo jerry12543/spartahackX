@@ -41,5 +41,9 @@
   
   .start-venture-btn {
     height: calc(100% - 10px); /* Match the height of the search bar (adjust for padding) */
+    width:200%;
+    margin-left:30px;
+    min-width:220px;
     padding: 12px 20px; /* Adjust padding for better alignment */
+    font-size:22px;
   }

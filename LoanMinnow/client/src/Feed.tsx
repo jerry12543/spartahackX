@@ -71,6 +71,7 @@ const Feed = () => {
           name={venture.name}
           description={venture.description}
           image_url={venture.image_url}
+          progress={30}       // ADD TO DATABASE
         />
       ))}
     </div>

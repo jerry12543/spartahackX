@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import './styles/ProfilePage.css';
 import './styles/Dashboard.css';
 import ProjectCard from './ProjectCard.tsx';
+import NavBar from './NavBar.tsx';
 
 const ProfilePage = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  const [goal, setGoal] = useState(0);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -19,6 +22,9 @@ const ProfilePage = () => {
   };
 
   return (
+    <>
+    <NavBar />
+    <div className="container-fluid d-flex justify-content-center pt-5" style={{marginTop:60}}>
     <div className="profile-page-container">
       {/* Profile Header */}
       <div className="profile-header">
@@ -47,8 +53,16 @@ const ProfilePage = () => {
         <div className="credit-info-box">
         <div className="row credit-info-row">
             <div className="credit-score-section">
-            <span className="credit-score" style={{fontSize:30, paddingLeft:30}}>750</span>
-            <div className="green-dot"></div>
+            <span className="credit-score" style={{fontSize:50, paddingLeft:30, marginBottom:-50}}>750</span>
+            <div style={{
+              width:36,
+              height:36,
+              backgroundColor:"#4caf50",    // can change color based on reputability here
+              borderRadius:"50%",
+              marginRight:80,
+              marginLeft:10,
+              marginBottom:-50
+              }}></div>
 
             <div className="col">
                 <div className="d-flex flex-column" style={{fontSize:20}}>
@@ -64,12 +78,18 @@ const ProfilePage = () => {
                 </div>
             </div>
             </div>
-            <div className="credit-amounts">
-            
-            </div>
         </div>
         <div className="d-flex justify-content-end">
-        <button className="add-funds-btn d-flex justify-content-center w-100">Add Funds</button>
+        <input
+            type="number"
+            id="goal"
+            min="0"
+            value={goal === 0 ? '' : goal} // Removes "0" placeholder when typing starts
+            onChange={(e) => setGoal(Math.max(0, Number(e.target.value)))}
+            className="form-input"
+            style={{height:40, marginTop:20, marginRight:10, width:"38%"}}
+        />
+        <button className="add-funds-btn d-flex justify-content-center">Add Funds</button>
         </div>
         
         </div>
@@ -106,6 +126,8 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </div>
+    </>
   );
 };
 

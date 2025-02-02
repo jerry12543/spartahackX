@@ -6,19 +6,13 @@ import './styles/Icons.css';
 const Icons = () => {
   return (
     <div className="icons-container">
-      <button className="icon-btn">
-        <img 
-          src="/static/bell.svg" 
-          alt="Notifications"
-          className="icon notification-icon"
-        />
-      </button>
       <div style={{width:10}}></div>
       <button className="icon-btn">
         <img 
             src="/static/user.svg" 
-            alt="Notifications"
-            className="icon notification-icon"
+            alt="User"
+            className="icon"
+            style={{ width:'40px', height:'40px' }}
           />
       </button>
     </div>

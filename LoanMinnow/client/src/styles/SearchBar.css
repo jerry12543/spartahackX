@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
     padding: 20px;
     background-color: white;
     z-index: 1000;
@@ -47,4 +47,5 @@
     border: none; /* No border for button */
     padding: 10px; /* Padding around the emoji */
     font-size: 20px; /* Larger font size for the emoji icon */
+    margin-bottom:8px;
   }

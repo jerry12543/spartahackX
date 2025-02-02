@@ -8,13 +8,15 @@ import SearchBar from './SearchBar.tsx';
 const NavBar = () => {
   return (
     <div className="nav-bar-container">
+      
       <div className="search-bar">
         <SearchBar />
       </div>
       <div className="nav-actions">
         <VentureButton />
-        <div style={{width:250}}></div>
-        <Icons />
+        <div className="icons-container">
+          <Icons />
+        </div>
       </div>
     </div>
   );
