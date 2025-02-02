@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import CreatePost from './CreatePost.tsx';
 import ProfilePage from './ProfilePage.tsx';
+import InvestorView from './InvestorView.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/newventure" element={<CreatePost />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/investordetails" element={<InvestorView />} />
       </Routes>
     </BrowserRouter>
   );
