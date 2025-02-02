@@ -31,6 +31,62 @@ def calculate_pledge_remaining(pledge):
     return max(remaining, 0)
 
 
+@transactions_blueprint.route('/ventures/<int:venture_id>/pledge/', methods=['POST'])
+@login_required
+def pledge_to_venture(venture_id):
+    """
+    Pledges a given amount to a venture. The amount pledged is added to the recipient's
+    outstanding balance for the venture. The pledger is the current user.
+
+    Expected JSON payload:
+        {
+          "amount": <amount to pledge>
+        }
+    """
+    data = request.get_json() or {}
+    try:
+        amount = float(data.get("amount", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid or missing lender_id or amount."}), 400
+
+    if amount <= 0:
+        return jsonify({"error": "Pledge amount must be positive."}), 400
+
+    # Retrieve the venture from the database.
+    venture = Venture.query.get(venture_id)
+    if not venture:
+        return jsonify({"error": "Venture not found."}), 404
+
+    # (Optional) Check if the current user has sufficient credits to cover the pledge.
+    if current_user.available_credits < amount:
+        return jsonify({"error": "Insufficient funds to pledge that amount."}), 400
+
+    try:
+        # Deduct the pledge amount from the user's available credits.
+        current_user.available_credits -= amount
+
+        # Update the venture's pledged total (initialize to 0 if None).
+        venture.total_pledged = (venture.total_pledged or 0) + amount
+
+        # Create a new pledge record.
+        pledge = Pledge(
+            venture_id=venture_id,
+            lender_id=current_user.id,  # using current_user instead of a passed lender_id
+            amount=amount
+        )
+        db.session.add(pledge)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to process pledge", "details": str(e)}), 500
+
+    return jsonify({
+        "message": "Pledge successful.",
+        "pledge": pledge.serialize(),  # Assuming Pledge has a serialize method.
+        "new_balance": current_user.available_credits,
+        "total_pledged": venture.total_pledged
+    }), 200
+
 @transactions_blueprint.route('/ventures/<int:venture_id>/repay/', methods=['POST'])
 @login_required
 def repay_venture(venture_id):

@@ -117,3 +117,13 @@
   .project-card:hover {
     transform: translateX(5px);
   }
+
+  .venture-image {
+    width: 100%;
+    max-height: 80%;
+    aspect-ratio: 16/9; /* or whatever the original image ratio is */
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    background-color: #f5f5f5; /* light background for empty space */
+  }

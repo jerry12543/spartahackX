@@ -49,3 +49,16 @@
     color: #4b5563;
     word-wrap: break-word;
   }
+
+  .progress-bar {
+    background-color: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .progress {
+    background-color: #6366f1;
+    height: 100%;
+    border-radius: inherit;
+  }

@@ -81,12 +81,20 @@ const ProfilePage = () => {
       }
       const data = await response.json();
       console.log('Funds added successfully:', data);
-      // Optionally, update profileData or available credits here if needed.
+      
+      // Update the profileData state with the new balance
+      setProfileData(prevData => ({
+        ...prevData,
+        available_credits: prevData.available_credits + goal
+      }));
+      
+      // Reset the goal input
+      setGoal(0);
     } catch (error) {
       console.error('Error adding funds:', error);
     }
   };
-
+  
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
