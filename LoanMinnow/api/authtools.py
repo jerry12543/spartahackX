@@ -3,7 +3,7 @@ from flask import Blueprint, request, redirect, url_for, flash, abort
 from werkzeug.security import generate_password_hash
 from loanminnow.model import db, User
 from flask_login import login_user, login_required, logout_user
-import flask
+from flask import jsonify
 
 # INCOMPLETE
 # TODO: return values
@@ -24,15 +24,20 @@ def create_user(username, email, password):
 @auth_blueprint.route('/signup/', methods=['POST'])
 def signup():
     """"Handle signup form submission."""
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
+    data = request.get_json()
+    email = data["email"]
+    name = data["name"]
+    password = data["password"]
+
+    if not email or not name or not password:
+        flash('All fields are required.', 'error')
+        return jsonify({"error": "Missing required fields"}), 400 
 
     # Check if user exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
         flash('Email already in use. Try logging in.', 'error')
-        return #TODO
+        return jsonify({"error": "Email is already in use. Please log in or use a different email."}), 409
 
     new_user = create_user(name, email, password)
 
@@ -40,14 +45,21 @@ def signup():
     login_user(new_user)
 
     flash('Signup successful! You are now logged in.', 'success')
-    return #TODO
+
+    context = {
+        "name": new_user.name,
+        "email": new_user.email,
+        "id": new_user.id
+    }
+    return  jsonify({"message": "User created successfully", "user": context}), 201
 
 
 @auth_blueprint.route('/login/', methods=['POST'])
 def login():
     """""Handle login form submission."""
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
 
     user = User.query.filter_by(email=email).first()
     if not user or not (user.password == generate_password_hash(password)):
