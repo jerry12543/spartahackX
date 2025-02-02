@@ -5,6 +5,7 @@ import Dashboard from './Dashboard.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import CreatePost from './CreatePost.tsx';
+import ProfilePage from './ProfilePage.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/newventure" element={<CreatePost />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

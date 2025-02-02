@@ -1,0 +1,131 @@
+/* ProfilePage.css */
+
+.profile-page-container {
+    padding: 20px;
+    width:100%;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9fafb; /* Light gray background */
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .profile-picture-container {
+    display: flex;
+    position: relative; /* Add this */
+    width: 150px; /* Match profile picture width */
+    height: 150px; /* Match profile picture height */
+  }
+  
+  .hidden-file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1; /* Ensure it's above the profile picture but contained within container */
+  }
+
+  .profile-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-picture-container {
+    position: relative;
+  }
+  
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #e5e7eb; /* Light gray */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-picture:hover {
+    cursor: pointer;
+  }
+  
+  .default-icon {
+    font-size: 80px;
+  }
+  
+  .credit-info-container {
+  }
+  
+  .username {
+    font-size: 32px;
+    margin-left: 15px; /* Space between profile picture and username */
+  }
+  
+  /* Right Section: Credit Info Box */
+  .credit-info-box {
+    background: linear-gradient(135deg, #dbeafe, #93c5fd); /* Light blue gradient */
+    padding: 20px;
+    border-radius: 12px; /* Rounded corners */
+    width:40%;
+  }
+  
+  .credit-score-section {
+    display: flex;
+    align-items: center; /* Vertically align score and dot */
+  }
+  
+  .credit-score {
+    font-size: 32px; /* Larger font size for credit score */
+    margin-right:12px;
+  }
+  
+  .green-dot {
+    width: 22px;
+    height: 22px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    margin-right:80px;
+  }
+
+  
+  .add-funds-btn {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  /* Account Activity */
+  .account-activity-heading {
+  }
+  
+  /* Projects-Ventures Layout */
+  .projects-ventures-container {
+    background: linear-gradient(135deg, #dbeafe, #93c5fd);
+  }
+
+  .profile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Reduces space between profile picture and username /
+}
+
+.username {
+  font-size: 32px; / Larger font size /
+  margin-left: 10px; / Minimal spacing from profile picture /
+  font-weight: normal; / Matches the design in the image */
+}
+
+.profile-picture-container {
+  display: flex;
+  align-items: center;
+}
