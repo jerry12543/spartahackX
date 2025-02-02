@@ -34,7 +34,8 @@ class User(db.Model, UserMixin):
     def current_overdue_amount(self):
         """Outstanding amount for overdue ventures."""
         now = datetime.now(timezone.utc)
-        total_pledged = sum(pledge.amount for pledge in self.recipients if pledge.venture.due_date < now)
+        total_pledged = sum(pledge.amount for pledge in self.recipients)
+        # total_pledged = sum(pledge.amount for pledge in self.recipients if pledge.venture.due_date < now)
         total_received = sum(payment.amount for payment in self.payments_received if payment.venture.due_date < now)
         return max(total_pledged - total_received, 0)
 

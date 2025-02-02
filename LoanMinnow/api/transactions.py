@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from loanminnow.api.model import db, Pledge, Payment, Venture, Interest
+from loanminnow.api.model import db, Pledge, Payment, Venture, Interest, User
 from flask_login import login_required, current_user
 from collections import defaultdict
 
@@ -61,28 +61,35 @@ def pledge_to_venture(venture_id):
     if current_user.available_credits < amount:
         return jsonify({"error": "Insufficient funds to pledge that amount."}), 400
 
-    try:
-        # Deduct the pledge amount from the user's available credits.
-        current_user.available_credits -= amount
+    # Deduct the pledge amount from the user's available credits.
+    current_user.available_credits -= amount
 
-        # Update the venture's pledged total (initialize to 0 if None).
-        venture.total_pledged = (venture.total_pledged or 0) + amount
+    recipient = venture.owner
+    recipient.available_credits += amount
 
-        # Create a new pledge record.
-        pledge = Pledge(
-            venture_id=venture_id,
-            lender_id=current_user.id,  # using current_user instead of a passed lender_id
-            amount=amount
-        )
-        db.session.add(pledge)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": "Failed to process pledge", "details": str(e)}), 500
+    total_pledged = sum(pledge.amount for pledge in venture.pledges)
+
+    # Update the venture's pledged total (initialize to 0 if None).
+    venture.total_pledged = (total_pledged or 0) + amount
+
+    # Create a new pledge record.
+    pledge = Pledge(
+        recipient=recipient,
+        lender=current_user,  # using current_user instead of a passed lender_id
+        amount=amount,
+        venture=venture
+    )
+    db.session.add(pledge)
+    db.session.commit()
+
+    print("returning: ", jsonify({
+        "message": "Pledge successful.",
+        "new_balance": current_user.available_credits,
+        "total_pledged": venture.total_pledged
+    }))
 
     return jsonify({
         "message": "Pledge successful.",
-        "pledge": pledge.serialize(),  # Assuming Pledge has a serialize method.
         "new_balance": current_user.available_credits,
         "total_pledged": venture.total_pledged
     }), 200

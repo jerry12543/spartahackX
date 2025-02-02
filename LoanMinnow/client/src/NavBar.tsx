@@ -10,7 +10,9 @@ const NavBar = () => {
   return (
     <div className="nav-bar-container">
       <button className="icon-btn" onClick={() => navigate('/dashboard')}>
-        <img src="/static/home.svg" alt="LoanMinnow" className="logo" fill="#4b5563"/>
+        <img src="/static/home.png" alt="LoanMinnow" className="logo" fill="#4b5563"
+        style={{ width:'50px', height:'50px', marginLeft:30, marginTop:5, fill:"#4b5563"}}
+        />
       </button>
       <div className="nav-actions">
         <VentureButton />

@@ -9,7 +9,7 @@ const SearchBar = () => {
     <div>  
       <button className="icon-btn" style={{zIndex:2005}} onClick={() => navigate('/dashboard')}>
           <img 
-              src="/static/home.svg" 
+              src="/static/home.png" 
               alt="Home"
               className="icon"
               style={{ width:'50px', height:'50px', marginLeft:30, marginTop:5, fill:"#4b5563"}}

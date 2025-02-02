@@ -19,35 +19,22 @@ interface Venture {
 }
 
 
-// const [pledgeAmount, setPledgeAmount] = useState<number>(0);
-
 const handlePledge = async (venture_id, pledgeAmount) => {
+  console.log('Pledging:', pledgeAmount);
+  console.log('Venture ID:', venture_id);
   if (pledgeAmount <= 0) {
     alert("Please enter a valid pledge amount.");
     return;
   }
+  const response = await fetch(`/transactions/ventures/${venture_id}/pledge/`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount: pledgeAmount })
+  });
 
-  try {
-    const response = await fetch(`/transactions/ventures/${venture_id}/pledge/`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: pledgeAmount })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process pledge');
-    }
-
-    const data = await response.json();
-    console.log('Pledge successful:', data);
-
-    
-  } catch (error) {
-    console.error('Error making pledge:', error);
-    alert(error instanceof Error ? error.message : 'An error occurred while pledging.');
-  }
+  const data = await response.json();
+  console.log('Pledge successful:', data);
 };
 
 
@@ -56,6 +43,8 @@ const VentureDetailsI = (venture_id_dict) => {
   const [venture, setVenture] = useState<Venture | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pledgeAmount, setPledgeAmount] = useState<number>(0);
+  
   const navigate = useNavigate();
 
   const fetchVentureData = async () => {
@@ -119,7 +108,7 @@ const VentureDetailsI = (venture_id_dict) => {
 
       {/* Progress Bar */}
       <progress
-        value={venture.pledged_amount ? venture.pledged_amount / venture.goal : 0}
+        value={venture.total_pledged ? venture.pledged_amount / venture.goal : 0.1}
         max="1"
         style={{
           width: '100%',
@@ -138,7 +127,12 @@ const VentureDetailsI = (venture_id_dict) => {
       {/* Due Date */}
       <div className="due-date label-style">
         <label>Due Date:&nbsp;</label>
-        <input type="date" value={venture.due_date} readOnly className="due-date-input" />
+        <input 
+          type="date" 
+          value={new Date(venture.due_date).toISOString().split('T')[0]} 
+          readOnly 
+          className="due-date-input" 
+        />      
       </div>
 
       {/* Description */}
@@ -157,12 +151,20 @@ const VentureDetailsI = (venture_id_dict) => {
           id="amount"
           min="0"
           className="form-input"
+          onChange={(e) => setPledgeAmount(Number(e.target.value))}
         />
       </div>
 
       {/* Buttons */}
       <div className="button-group">
       <button className="close-btn" onClick={() => navigate("/dashboard")}>Close</button>
+      <button
+          className="pledge-btn"
+          style={{ marginLeft: '10px' }}
+          onClick={() => handlePledge(venture.id, pledgeAmount)}
+        >
+          Pledge
+        </button>
       </div>
     </div>
   );

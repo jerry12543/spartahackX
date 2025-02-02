@@ -1,5 +1,5 @@
 import math
-from datetime import datetime, timezone
+import datetime
 from sqlalchemy import func
 from loanminnow.api.model import db, User
 
@@ -22,12 +22,17 @@ def get_score(user: User):
     Finally, these metrics are combined into a karma score using a weighted formula.
     """
 
-    now = datetime.now(timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     # Pledges where the user is the recipient (i.e. borrowing)
+    print(user.recipients)
+    for pledge in user.recipients:
+        print(pledge)
+        print(pledge.venture.due_date)
+    # print(type(now))
     current_borrowed = sum(
-        pledge.amount for pledge in user.recipients 
-        if pledge.venture.due_date > now
+        pledge.amount for pledge in user.recipients
+        # if ((datetime.datetime(pledge.venture.due_date)) > now)
     )
     total_borrowed = sum(pledge.amount for pledge in user.recipients)
 
