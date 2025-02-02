@@ -1,15 +1,17 @@
 // NewVenture.tsx
 import React, { useState } from 'react';
 import './styles/NewVenture.css';
+import { useNavigate } from 'react-router-dom';
 
 const NewVenture = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [name, setName] = useState('');
-  const [amount, setAmount] = useState(0);
   const [interestRate, setInterestRate] = useState(0);
   const [goal, setGoal] = useState(0);
   const [dueDate, setDueDate] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -23,6 +25,43 @@ const NewVenture = () => {
       fileInput.click();
     }
   };
+
+  const submit = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('operation', 'create');
+      formData.append('name', name);
+      formData.append('interest_rate', interestRate.toString());
+      formData.append('goal', goal.toString());
+      formData.append('due_date', dueDate);
+      formData.append('description', description);
+      
+      if (selectedFile) {
+        formData.append('image', selectedFile);
+      }
+  
+      const response = await fetch("/venture/new/", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.status === 405) {
+        navigate('/');
+      }
+      if (response.status === 201) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Venture creation error:', err);
+    } finally {
+      console.log("Venture created");
+    }
+  };
+
+  if (error) {
+    return <div>Error loading dashboard: {error}</div>;
+  }
 
   return (
     <div className="new-venture-container">
@@ -51,19 +90,6 @@ const NewVenture = () => {
           placeholder="Enter venture name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="form-input"
-        />
-      </div>
-
-      {/* Amount Input */}
-      <div className="form-group form-row">
-        <label htmlFor="amount" className="form-label">Amount</label>
-        <input
-          type="number"
-          id="amount"
-          min="0"
-          value={amount === 0 ? '' : amount} // Removes "0" placeholder when typing starts
-          onChange={(e) => setAmount(Number(e.target.value))}
           className="form-input"
         />
       </div>
@@ -122,7 +148,7 @@ const NewVenture = () => {
       {/* FORM BUTTONS */}
       <div className="button-group">
         <button className="cancel-btn">Cancel</button>
-        <button className="save-btn">Save</button>
+        <button className="save-btn" onClick={() => submit()}>Save</button>
     </div>
     </div>
   );
