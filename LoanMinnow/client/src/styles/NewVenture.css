@@ -1,0 +1,108 @@
+/* NewVenture.css */
+
+.new-venture-container {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.new-venture-heading {
+  font-size: 24px;
+  color: #1e3a8a; /* Dark blue */
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e3a8a; /* Dark blue */
+}
+
+.upload-box {
+  width: 100%;
+  height: 150px; /* Fixed height for the upload box */
+  border: 2px dashed #d1d5db; /* Dashed border for the gray box */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f9fafb; /* Light gray background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #6b7280; /* Gray text */
+}
+
+.upload-box:hover {
+  background-color: #f3f4f6; /* Slightly darker gray on hover */
+}
+
+.hidden-file-input {
+  display: none; /* Hides the default file input element */
+}
+
+.form-row {
+  display: flex;
+}
+
+.form-input {
+  margin-left: auto; /* Pushes input to the right of the label */
+  padding: 10px;
+}
+
+.slider {
+}
+
+.form-input,
+.form-textarea {
+  border: 1px solid #93c5fd; /* Subtle blue border */
+  border-radius: 4px;
+  padding: 10px;
+  width: 80%;
+  font-size: 16px;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6; /* Darker blue when focused */
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f3f4f6;
+  color: #1e3a8a;
+  cursor: pointer;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+}

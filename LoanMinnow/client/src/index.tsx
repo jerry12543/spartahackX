@@ -4,6 +4,7 @@ import LoginPage from "./Login.tsx"
 import Dashboard from './Dashboard.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
+import CreatePost from './CreatePost.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/newpost" element={<CreatePost />} />
       </Routes>
     </BrowserRouter>
   );
