@@ -13,4 +13,3 @@ UPLOAD_FOLDER = pathlib.Path(os.path.join(LOANMINNOWROOT, "var", "uploads"))
 DB_PATH = pathlib.Path(os.path.join(LOANMINNOWROOT, "var", "loanminnow.db"))
 SQLALCHEMY_DATABASE_URI = f'sqlite:///{DB_PATH}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-MY_ADDRESS = 'localhost:5000'

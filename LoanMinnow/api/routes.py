@@ -15,10 +15,10 @@ api_blueprint = Blueprint('api', __name__)
 def download_file(filename):
     """Download a file."""
     if not os.path.exists(
-        os.path.join(current_app.config["MY_ADDRESS"] / current_app.config['UPLOAD_FOLDER'],
+        os.path.join(current_app.config['UPLOAD_FOLDER'],
                      filename)):
         flask.abort(404)
-    return flask.send_from_directory(current_app.config["MY_ADDRESS"] / current_app.config['UPLOAD_FOLDER'],
+    return flask.send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                      filename, as_attachment=False)
 
 

@@ -5,6 +5,7 @@ import './styles/ProfilePage.css';
 import './styles/Dashboard.css';
 import ProjectCard from './ProjectCard.tsx';
 import NavBar from './NavBar.tsx';
+import SearchBar from './SearchBar.tsx';
 
 interface Venture {
   venture_id: number;

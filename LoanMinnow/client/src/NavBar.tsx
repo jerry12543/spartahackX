@@ -8,7 +8,9 @@ import SearchBar from './SearchBar.tsx';
 const NavBar = () => {
   return (
     <div className="nav-bar-container">
-      
+      <div className="logo-container">
+        <img src="/static/home.svg" alt="LoanMinnow" className="logo" />
+      </div>
       <div className="search-bar">
         <SearchBar />
       </div>
