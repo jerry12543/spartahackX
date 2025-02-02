@@ -1,7 +1,7 @@
 """"This module contains the routes for user signup, login, and logout."""
 from flask import Blueprint, request, redirect, url_for, abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from loanminnow.model import db, User
+from loanminnow.api.model import db, User
 from flask_login import login_user, login_required, logout_user
 from flask import jsonify
 

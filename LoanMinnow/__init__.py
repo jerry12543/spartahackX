@@ -5,7 +5,7 @@ from loanminnow.api.authtools import auth_blueprint
 from loanminnow.api.search import search_blueprint
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from loanminnow.model import db, User
+from loanminnow.api.model import db, User
 
 login_manager = LoginManager()
 

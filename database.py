@@ -1,5 +1,5 @@
 from flask import Flask
-from loanminnow.model import db, User, Venture, Pledge, Payment
+from loanminnow.api.model import db, User, Venture, Pledge, Payment
 
 # Initialize Flask App
 app = Flask(__name__)

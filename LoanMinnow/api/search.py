@@ -1,7 +1,7 @@
 import flask
 from flask import Blueprint, request, jsonify
 from sqlalchemy import or_
-from loanminnow.model import db, User, Venture, Pledge
+from loanminnow.api.model import db, User, Venture, Pledge
 
 search_blueprint = Blueprint('search', __name__)
 

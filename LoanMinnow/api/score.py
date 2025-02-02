@@ -1,7 +1,7 @@
 import math
 from datetime import datetime, timezone
 from sqlalchemy import func
-from loanminnow.model import db, User
+from loanminnow.api.model import db, User
 
 
 def get_score(user: User):

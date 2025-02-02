@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 import flask_login
 from flask_login import login_required, current_user
 import api.score
-from model import db, User, Pledge, Venture
+from loanminnow.api.model import db, User, Pledge, Venture
 from sqlalchemy import func
 
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './styles/Login.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const LoginPage = () => {
     });
     const [error, setError] = useState("");
     const [isLogin, setIsLogin] = useState(true);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,6 +29,7 @@ const LoginPage = () => {
             });
             if (response.status === 200) {
                 setError(isLogin ? 'Login successful' : 'Sign up successful');
+                navigate('/dashboard');
             }
             else if (response.status === 409) {
                 setError(isLogin ? "Incorrect password" : "Email already exists, please sign in");
