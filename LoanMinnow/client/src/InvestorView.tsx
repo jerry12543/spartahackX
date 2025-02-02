@@ -5,7 +5,19 @@ import DashboardSidebar from './Data.tsx';
 import NavBar from './NavBar.tsx';
 import VentureDetailsI from './VentureDetailsI.tsx';
 
-export default function InvestorView() {
+
+const InvestorView = () => {
+  const [error, setError] = React.useState<string | null>(null);
+
+  const fetchVentureData = async () => {
+    try{
+      let url = '/venture/'
+    }
+      catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  }
+
   return (
     <>
       {/* LANDING PAGE LOGGED IN */}
@@ -23,3 +35,5 @@ export default function InvestorView() {
     </>
   );
 }
+
+export default InvestorView;

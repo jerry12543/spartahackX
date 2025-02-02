@@ -20,14 +20,14 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/newventure" element={<CreatePost />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/investordetails" element={<InvestorView />} />
+        <Route path="/investordetails/:venture_id" element={<InvestorView />} />
         <Route path="/clientdetails" element={<ClientView />} />
         <Route path="/profile/:profile_id" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );
-};
-
+}
+  
 const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 root.render(
@@ -35,3 +35,5 @@ root.render(
     <App />
   </React.StrictMode>
 );
+  
+export default App;

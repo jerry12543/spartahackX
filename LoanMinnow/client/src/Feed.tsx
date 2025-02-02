@@ -67,12 +67,14 @@ const Feed = () => {
   return (
     <div className="feed-container rounded">
       {ventures.map(venture => (
-        <Post
-          name={venture.name}
-          description={venture.description}
-          image_url={venture.image_url}
-          progress={30}       // ADD TO DATABASE
-        />
+        <a key={venture.id} href={`/investordetails/${venture.id}`}>
+          <Post
+            name={venture.name}
+            description={venture.description}
+            image_url={venture.image_url}
+            progress={venture.progress}
+          />
+        </a>
       ))}
     </div>
   );

@@ -156,6 +156,8 @@ def self_dashboard(n):
         "top_supported": top_supported_data,
         "top_created": top_created_data
     }
+    print("shipping this load of data")
+    print(context)
     return jsonify(**context)
 
 

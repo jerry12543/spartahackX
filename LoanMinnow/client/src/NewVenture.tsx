@@ -147,7 +147,7 @@ const NewVenture = () => {
 
       {/* FORM BUTTONS */}
       <div className="button-group">
-        <button className="cancel-btn">Cancel</button>
+        <button className="cancel-btn" onClick={() => navigate('/dashboard')}>Cancel</button>
         <button className="save-btn" onClick={() => submit()}>Save</button>
     </div>
     </div>

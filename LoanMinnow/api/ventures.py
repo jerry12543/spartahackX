@@ -25,7 +25,8 @@ def get_venture(venture_id):
         "goal": venture.goal,
         "interest_rate": venture.interest_rate,
         "due_date": venture.due_date.isoformat() if venture.due_date else None,
-        "image_url": venture.image_url
+        "image_url": venture.image_url,
+        "pledged_amount": sum(pledge.amount for pledge in venture.pledges),
     })
 
 

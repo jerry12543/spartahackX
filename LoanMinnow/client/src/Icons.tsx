@@ -1,13 +1,15 @@
 // Icons.tsx
 import React from 'react';
 import './styles/Icons.css';
-// import { bellIcon, userIcon } from './../static/bell.svg'
+import { useNavigate } from 'react-router-dom';
 
 const Icons = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="icons-container">
       <div style={{width:10}}></div>
-      <button className="icon-btn">
+      <button className="icon-btn" onClick={() => navigate('/profile')}>
         <img 
             src="/static/user.svg" 
             alt="User"

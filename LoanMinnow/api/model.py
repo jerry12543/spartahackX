@@ -67,8 +67,6 @@ class Venture(db.Model):
         self.image_url = image_url
 
 
-
-
 class Pledge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Float, nullable=False)
