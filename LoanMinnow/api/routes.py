@@ -66,7 +66,10 @@ def dashboard():
         {
             "venture_id": venture.id,
             "venture_name": venture.name,
-            "total_amount_invested": total_amount_invested
+            "venture_image_url": venture.image_url,
+            "total_pledged": sum(pledge.amount for pledge in venture.pledges),
+            "total_requested": venture.goal,
+            "total_amount_invested_user": total_amount_invested
         }
         for total_amount_invested, venture in top_supported
     ]
@@ -74,10 +77,38 @@ def dashboard():
         {
             "venture_id": venture.id,
             "venture_name": venture.name,
-            "total_amount_invested": total_amount_invested
+            "venture_image_url": venture.image_url,
+            "total_pledged": sum(pledge.amount for pledge in venture.pledges),
+            "total_requested": venture.goal,
+            "total_amount_invested_user": total_amount_invested
         }
         for total_amount_invested, venture in top_created
     ]
+
+    # top_supported_data = [
+    #     {
+    #         "venture_id": 0,
+    #         "venture_name": "hello",
+    #         "venture_image_url": "/fjdsaklk;das/",
+    #         "total_pledged": 45,
+    #         "total_requested": 90,
+    #         "total_amount_invested_user": 20
+    #     }
+    # ]
+    # top_created_data = [
+    #     {
+    #         "venture_id": 1,
+    #         "venture_name": "hello",
+    #         "venture_image_url": "/fjdsaklk;das/",
+    #         "total_pledged": 45,
+    #         "total_requested": 90,
+    #         "total_amount_invested_user": 20
+    #     }
+    # ]
+
+    # score = 1
+    # available_credits = 100
+    # credits_invested = 50
 
     context = {
         "score": score,

@@ -1,15 +1,78 @@
 // Feed.tsx
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import './styles/Feed.css';
 import Post from './Post.tsx';
 
+interface Venture {
+  id: number;
+  name: string;
+  description: string;
+  goal: number;
+  interest_rate: number;
+  due_date: string;
+  image_url: string;
+}
+
+interface FeedResponse {
+  next: string;
+  results: Venture[];
+  url: string;
+}
+
 const Feed = () => {
+  const [ventures, setVentures] = useState<Venture[]>([]);
+  const [nextPage, setNextPage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchVentures = async (url = '/api/venture/newest/') => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(url, {
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch ventures');
+      }
+
+      const data: FeedResponse = await response.json();
+      setVentures(prevVentures => [...prevVentures, ...data.results]);
+      setNextPage(data.next || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error fetching ventures:', err);
+    } finally {
+      setIsLoading(false);
+      console.log("Ventures: ", ventures);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchVentures();
+  }, []);
+
+  // Load more function for infinite scroll
+  const loadMore = () => {
+    if (nextPage && !isLoading) {
+      fetchVentures(nextPage);
+    }
+  };
+
+  if (error) {
+    return <div className="feed-error">Error loading feed: {error}</div>;
+  }
+
   return (
     <div className="feed-container rounded">
-      {/* Create any number of Posts component by calling this below: */}
-      <Post name={"I need money"} description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}/>
-
-      <Post name={"We need money"} description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}/>
+      {ventures.map(venture => (
+        <Post
+          name={venture.name}
+          description={venture.description}
+          image_url={venture.image_url}
+        />
+      ))}
     </div>
   );
 };

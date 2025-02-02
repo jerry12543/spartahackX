@@ -2,7 +2,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Feed from './Feed.tsx';
-import Data from './Data.tsx';
+import DashboardSidebar from './Data.tsx';
 import NavBar from './NavBar.tsx';
 
 export default function Dashboard() {
@@ -16,7 +16,7 @@ export default function Dashboard() {
             <Feed />
           </div>
           <div className="col-12 col-md-4 d-none d-md-block">
-            <Data />
+            <DashboardSidebar />
           </div>
         </div>
       </div>

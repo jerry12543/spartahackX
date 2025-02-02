@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     available_credits = db.Column(db.Float, default=0.0, nullable=False)
     
     # Relationships
+    ventures_owned = db.relationship('Venture', back_populates='owner', lazy=True)
     pledges = db.relationship('Pledge', foreign_keys='Pledge.lender_id', back_populates='lender', lazy=True)
     recipients = db.relationship('Pledge', foreign_keys='Pledge.recipient_id', back_populates='recipient', lazy=True)
     payments = db.relationship('Payment', foreign_keys='Payment.payer_id', back_populates='payer', lazy=True)
@@ -47,17 +48,24 @@ class Venture(db.Model):
     due_date = db.Column(db.DateTime, nullable=False)
     image_url = db.Column(db.String(255), nullable=True)
 
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
     # Relationships
+    owner = db.relationship('User', back_populates='ventures_owned')
     pledges = db.relationship('Pledge', back_populates='venture', lazy=True)
     payments = db.relationship('Payment', back_populates='venture', lazy=True)
     
-    def __init__(self, name, description, goal, interest_rate, due_date, image_url=None):
+    def __init__(self, name, description, goal, interest_rate, due_date, owner, image_url=None):
         self.name = name
         self.description = description
         self.goal = goal
         self.interest_rate = interest_rate
         self.due_date = due_date
+        self.owner = owner
         self.image_url = image_url
+
+
 
 
 class Pledge(db.Model):

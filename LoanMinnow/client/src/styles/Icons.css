@@ -10,8 +10,28 @@
     border: none;
     font-size: 20px; /* Larger icon size */
     cursor: pointer;
+    color: #3b82f6; /* Blue icon color */
+    max-height: 50px;
+    max-width: 50px;
   }
   
   .icon-btn:hover {
     color: #3b82f6; /* Lighter blue on hover */
+  }
+
+    /* styles/Icons.css */
+  .icon {
+    width: 24px;  /* or your desired size */
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .notification-icon {
+    /* specific styles for the bell icon */
+    filter: invert(50%);  /* makes icon grey */
+    transition: filter 0.2s ease;
+  }
+
+  .notification-icon:hover {
+    filter: invert(30%);  /* darker on hover */
   }

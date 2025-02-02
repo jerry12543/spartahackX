@@ -6,8 +6,11 @@ const SearchBar = () => {
   return (
     <div className="search-bar-container">
       <div className="search-bar">
-        <input type="text" placeholder="Search here..." className="search-input" />
-        <button className="search-btn">🔍</button>
+        <img 
+          src="/static/search.svg" 
+          alt="Notifications"
+          className="icon notification-icon"
+        />
       </div>
     </div>
   );

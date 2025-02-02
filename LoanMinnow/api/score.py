@@ -79,10 +79,10 @@ def calculate_karma_score(userinfo):
         loan = 100 * 1.5^(score - 1)
     """
     base_score = 42
-    current_score_factor = (abs(math.log(c_borrowed / 100, 1.5)) + 1)
-    current_score = ((c_paid - c_overdue) / (c_borrowed * 0.85 + overdue * 2.5)) * 2 - 1
-    history_score_factor = (abs(math.log(borrowed / 100, 1.5)) + 1)
-    history_score = ((paid - overdue) / (borrowed + overdue * 2.5)) * 2 - 1
+    current_score_factor = (abs(math.log((c_borrowed + 1) / 100, 1.5)) + 1)
+    current_score = ((c_paid - c_overdue) / ((c_borrowed + 1) * 0.85 + overdue * 2.5)) * 2 - 1
+    history_score_factor = (abs(math.log(borrowed + 1 / 100, 1.5)) + 1)
+    history_score = ((paid - overdue) / ((borrowed + 1) + overdue * 2.5)) * 2 - 1
     score = base_score + 0.4 * current_score * current_score_factor + 0.6 * history_score * history_score_factor
-    return score
+    return round(score, 1)
 
