@@ -1,0 +1,45 @@
+/* NavBar.css */
+
+.nav-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    z-index: 1000;
+    display: flex; /* Flexbox for horizontal alignment */
+    justify-content: space-between; /* Space between search bar and actions */
+    align-items: center; /* Vertically align items */
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    width: calc(66.66% - 20px); /* Adjusted width to fit alongside actions */
+  }
+  
+  .search-input {
+    flex-grow: 1; /* Expands to fill available space */
+    padding: 12px;
+    border-radius: 8px; /* Rounded corners */
+  }
+  
+  .search-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 20px; /* Larger font size for emoji */
+  }
+  
+  .nav-actions {
+    margin-left:38px;
+    width:33%;
+    display: flex; /* Aligns button and icons in a row */
+    align-items: center;
+    gap: 25px; /* Increased spacing between icons */
+  }
+  
+  .start-venture-btn {
+    height: calc(100% - 10px); /* Match the height of the search bar (adjust for padding) */
+    padding: 12px 20px; /* Adjust padding for better alignment */
+  }

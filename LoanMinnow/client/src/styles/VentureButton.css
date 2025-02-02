@@ -1,0 +1,16 @@
+/* VentureButton.css */
+.start-venture-btn {
+    background-color: #1e3a8a; /* Dark blue */
+    color: white;
+    border: none;
+    padding: 20px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    z-index:2000;
+  }
+  
+  .start-venture-btn:hover {
+    background-color: #3b82f6; /* Lighter blue on hover */
+  }

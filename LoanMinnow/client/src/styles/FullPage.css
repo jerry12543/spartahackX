@@ -1,0 +1,46 @@
+/* FullPage.css */
+
+/* General Layout */
+.full-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #dbeafe, #93c5fd); /* Blue gradient background */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-container {
+    display: flex;
+  }
+  
+  .search-input {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+  }
+  
+  .filter-btn,
+  .search-btn {
+    margin-left: 8px;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .venture-btn {
+    background-color: #1e3a8a;
+  }
+  
+  /* Content Layout */
+  .content-wrapper {
+  }

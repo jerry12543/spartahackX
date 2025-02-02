@@ -1,0 +1,73 @@
+/* DashboardSidebar.css */
+.dashboard-sidebar {
+  background: linear-gradient(135deg, #dbeafe, #93c5fd);
+  padding: 20px;
+  border-radius: 16px;
+  color: #1e3a8a;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.score-section {
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.score-number {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.score-indicator {
+  width: 20px;
+  height: 20px;
+  background-color: #4caf50;
+  border-radius: 50%;
+}
+
+.credit-info {
+  margin-top: 15px;
+}
+
+.credit-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.projects-section {
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 16px;
+  color: #1e3a8a;
+}
+
+.project-card {
+  background-color: rgba(255, 255, 255, .8);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: translateX(5px);
+}

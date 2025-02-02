@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import LoginPage from "./Login.tsx"
-import Dashboard from "./Dashboard.tsx"
+import Dashboard from './Dashboard.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
