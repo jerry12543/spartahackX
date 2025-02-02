@@ -1,10 +1,14 @@
 """"loanminnow development config"""
 import os
+import pathlib
 
 
 APPLICATION_ROOT = '/'
 
 SECRET_KEY = 'spartahackx'
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'db.sqlite')}"
+
+LOANMINNOWROOT = pathlib.Path(__file__).resolve().parent.parent
+DB_PATH = os.path.join(LOANMINNOWROOT, "var", "loanminnow.db")
+SQLALCHEMY_DATABASE_URI = f'sqlite:///{DB_PATH}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False

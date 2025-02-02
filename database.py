@@ -1,12 +1,11 @@
 from flask import Flask
-from model import db
+from loanminnow.model import db, User, Venture, Pledge, Payment
 
 # Initialize Flask App
 app = Flask(__name__)
 
 # Database Configuration - Change as needed
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///venture_funding.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('loanminnow.config')
 
 # Bind database to Flask app
 db.init_app(app)

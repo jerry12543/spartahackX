@@ -3,6 +3,7 @@ from flask import Blueprint, request, redirect, url_for, flash, abort
 from werkzeug.security import generate_password_hash
 from loanminnow.model import db, User
 from flask_login import login_user, login_required, logout_user
+import flask
 
 # INCOMPLETE
 # TODO: return values
@@ -55,7 +56,7 @@ def login():
     
     login_user(user)
     flash('Login successful!', 'success')
-    return #TODO
+    return 403
 
 
 @auth_blueprint.route('/logout/', methods=['POST'])
@@ -64,4 +65,4 @@ def logout():
     """"Log out the current user."""
     logout_user()
     flash('You have been logged out.', 'success')
-    return #TODO
+    return 200
