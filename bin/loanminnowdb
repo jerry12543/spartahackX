@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+
+
+usage() {
+  echo "Usage: $0 (create|destroy|reset)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+SCRIPT_DIR="$(dirname "$0")"
+TARGET_SCRIPT="$SCRIPT_DIR/database.py"
+
+# Parse argument.  $1 is the first argument
+case $1 in 
+"create")
+  mkdir -p var/
+  python3 "$TARGET_SCRIPT"
+    ;;
+
+  "destroy")
+    rm -rf var/loanminnow.db
+    echo "database destroyed"
+    ;;
+
+  "reset")
+    $0 destroy
+    $0 create
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

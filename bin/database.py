@@ -1,4 +1,12 @@
 from flask import Flask
+import sys
+import os
+
+# Get the absolute path to the project root (one level above 'bin/')
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, PROJECT_ROOT)  # Add to sys.path
+
+# Now you can import loanminnow modules
 from loanminnow.api.model import db, User, Venture, Pledge, Payment
 
 # Initialize Flask App
