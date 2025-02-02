@@ -7,6 +7,7 @@ import './index.css';
 import CreatePost from './CreatePost.tsx';
 import ProfilePage from './ProfilePage.tsx';
 import InvestorView from './InvestorView.tsx';
+import ClientView from './ClientView.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/newventure" element={<CreatePost />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/investordetails" element={<InvestorView />} />
+        <Route path="/clientdetails" element={<ClientView />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,9 +1,9 @@
 import React from 'react';
 import './styles/VentureDetailsI.css';
 
-// FROM POV OF PEOPLE WHO WANT TO INVEST
+// FROM POV OF PEOPLE WHO ARE RECEIVING INVESTMENTS
 
-const VentureDetailsI = () => {
+const VentureDetailsC = () => {
   return (
     <div className="venture-details-container">
       {/* Venture Name */}
@@ -31,6 +31,8 @@ const VentureDetailsI = () => {
       <h1 className="label-style" style={{marginTop:30}}>Goal Amount: $10,000</h1>
 
       <h1 className="label-style">Interest: 5%</h1>
+
+      <h1 className="label-style">Amount Received: $5000</h1>
 
       {/* Due Date */}
       <div className="due-date label-style">
@@ -67,10 +69,10 @@ const VentureDetailsI = () => {
       {/* Buttons */}
       <div className="button-group">
       <button className="close-btn">Close</button>
-        <button className="pay-btn">Pay</button>
+        <button className="pay-btn">Pay Back</button>
       </div>
     </div>
   );
 };
 
-export default VentureDetailsI;
+export default VentureDetailsC;
