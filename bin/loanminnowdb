@@ -19,11 +19,13 @@ TARGET_SCRIPT="$SCRIPT_DIR/database.py"
 case $1 in 
 "create")
   mkdir -p var/
+  mkdir -p var/uploads
   python3 "$TARGET_SCRIPT"
     ;;
 
   "destroy")
     rm -rf var/loanminnow.db
+    rm -rf var/uploads
     echo "database destroyed"
     ;;
 
