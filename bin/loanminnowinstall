@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "$0")"
 TARGET_SCRIPT="$SCRIPT_DIR/loanminnowdb"
 
 # virtual env setup
-python3 venv "$SCRIPT_DIR"/../.venv
+python3 -m venv "$SCRIPT_DIR"/../.venv
 source "$SCRIPT_DIR"/../.venv/bin/activate
 pip install -r "$SCRIPT_DIR"/../requirements.txt
 
