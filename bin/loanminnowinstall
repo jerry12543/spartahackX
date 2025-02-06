@@ -3,7 +3,6 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(dirname "$0")"
-TARGET_SCRIPT="$SCRIPT_DIR/loanminnowdb"
 
 # virtual env setup
 python3 -m venv "$SCRIPT_DIR"/../.venv
@@ -11,7 +10,8 @@ source "$SCRIPT_DIR"/../.venv/bin/activate
 pip install -r "$SCRIPT_DIR"/../requirements.txt
 
 # db setup
-"./$TARGET_SCRIPT" create
+./"$SCRIPT_DIR/loanminnowdb" create
 
 # npm setup
 npm install --prefix "$SCRIPT_DIR"/../loanminnow
+npm install --prefix "$SCRIPT_DIR"/../loanminnow/client
